@@ -1,0 +1,292 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * ============================================================================
+ * BANDVERSE DESIGN TOKENS
+ * ============================================================================
+ * Source of truth: docs/DesignSystem.md
+ *
+ * Two layers of color tokens exist on purpose:
+ *
+ * 1. RAW PALETTE (--color-primary-50..900, --color-gold-*, --color-success-*,
+ *    --color-neutral-*, etc.) — fixed values, NOT theme-aware. Use these only
+ *    for one-off / non-themed contexts (data viz, illustrations, marketing
+ *    graphics) where the exact hex shouldn't shift between light and dark.
+ *
+ * 2. SEMANTIC TOKENS (--background, --foreground, --card, --primary, --ring,
+ *    etc.) — theme-aware, re-defined per theme in :root / .dark below. Use
+ *    these (via bg-background, text-foreground, bg-card, border-border, ...)
+ *    for ALL UI chrome. This is what makes dark/light mode "just work" across
+ *    every component without per-component theme branching.
+ *
+ * Rule of thumb: if it's part of the interface, use a semantic token.
+ * If it's a fixed brand/data color, use the raw palette.
+ * ============================================================================
+ */
+
+@theme {
+  /* ---- Raw palette: Primary ("Stage Violet") ---- */
+  --color-primary-50: #f4f1ff;
+  --color-primary-100: #e7e0ff;
+  --color-primary-200: #cfc1ff;
+  --color-primary-300: #ad97ff;
+  --color-primary-400: #8d71ff;
+  --color-primary-500: #7451f5;
+  --color-primary-600: #5d37e0;
+  --color-primary-700: #4826b8;
+  --color-primary-800: #341b87;
+  --color-primary-900: #20105a;
+
+  /* ---- Raw palette: Accent ("Spotlight Gold") ----
+     Reserved for high-intent moments only (CTAs, ratings, featured badges).
+     Never used as the default shadcn "accent" hover tint — see --accent below. */
+  --color-gold-50: #fff8e9;
+  --color-gold-100: #ffecc2;
+  --color-gold-300: #ffd374;
+  --color-gold-500: #f5a623;
+  --color-gold-600: #d6890f;
+  --color-gold-700: #a8680a;
+
+  /* ---- Raw palette: Semantic (system meaning only, never decoration) ---- */
+  --color-success-50: #e9f9f1;
+  --color-success-500: #2fb673;
+  --color-success-700: #1f7a4d;
+  --color-warning-50: #fdf3e3;
+  --color-warning-500: #e8a93b;
+  --color-warning-700: #a9761f;
+  --color-error-50: #fbeae9;
+  --color-error-500: #e2544b;
+  --color-error-700: #a93831;
+  --color-info-50: #eaf1ff;
+  --color-info-500: #4c8dff;
+  --color-info-700: #2e5fbf;
+
+  /* ---- Raw palette: Neutral (violet-tinted, not pure gray) ----
+     Values below are the light-theme role hexes, used as the canonical
+     fixed swatches for raw `neutral-*` utilities. */
+  --color-neutral-0: #0d0c14;
+  --color-neutral-50: #fafafc;
+  --color-neutral-100: #f2f1f6;
+  --color-neutral-200: #e7e5ee;
+  --color-neutral-300: #d8d6e3;
+  --color-neutral-400: #c1bfcf;
+  --color-neutral-500: #8e8ca3;
+  --color-neutral-600: #6b6980;
+  --color-neutral-700: #4a4860;
+  --color-neutral-800: #2a2840;
+  --color-neutral-900: #0d0c14;
+
+  /* ---- Typography ----
+     Display font is a placeholder — see src/lib/fonts.ts for details. */
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-display-placeholder);
+  --font-heading: var(
+    --font-display
+  ); /* consumed by shadcn primitives, e.g. SheetTitle */
+  --font-noto: var(--font-noto-sans);
+
+  /* ---- Breakpoints (per docs/DesignSystem.md §Layout) ----
+     Overrides Tailwind's defaults (sm 640/2xl 1536) to match spec exactly. */
+  --breakpoint-sm: 30rem; /* 480px */
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+  --breakpoint-xl: 80rem; /* 1280px */
+  --breakpoint-2xl: 90rem; /* 1440px */
+
+  /* ---- Motion (durations only — see src/lib/motion.ts for JS/Framer Motion
+     equivalents, since CSS variables can't be consumed by Framer Motion's
+     transition props directly) ---- */
+  --ease-premium: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Card radius is fixed at 16px per docs/DesignSystem.md ("16px corner
+     radius across all cards") — everything else derives proportionally. */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --radius: 1rem; /* 16px — matches Design System card radius spec */
+
+  /* Semantic tokens — LIGHT THEME */
+  --background: #fafafc; /* neutral-50 */
+  --foreground: #0d0c14; /* neutral-900 (primary text) */
+  --card: #f2f1f6; /* neutral-100 ("surface/card") */
+  --card-foreground: #0d0c14;
+  --popover: #ffffff; /* elevated above card per light-theme shadow strategy */
+  --popover-foreground: #0d0c14;
+  --primary: #7451f5; /* primary-500 — brighter step reads best on light bg */
+  --primary-foreground: #ffffff;
+  --secondary: #f2f1f6; /* neutral-100 */
+  --secondary-foreground: #0d0c14;
+  --muted: #f2f1f6;
+  --muted-foreground: #6b6980; /* neutral-600 */
+  --accent: #e7e0ff; /* primary-100 tint — subtle, on-brand hover background.
+    NOTE: this is shadcn's generic "interactive hover tint" semantic, distinct
+    from the brand Spotlight Gold accent (--color-gold-*), which is reserved
+    for high-intent moments only and must stay rare. */
+  --accent-foreground: #4826b8; /* primary-700 */
+  --destructive: #e2544b; /* error-500 */
+  --destructive-foreground: #ffffff;
+  --border: #e7e5ee; /* neutral-200 */
+  --input: #d8d6e3; /* neutral-300 — slightly more visible for form fields */
+  --ring: #5d37e0; /* primary-600 — meets AA non-text contrast on light bg */
+
+  --chart-1: #7451f5; /* primary-500 */
+  --chart-2: #f5a623; /* gold-500 */
+  --chart-3: #2fb673; /* success-500 */
+  --chart-4: #4c8dff; /* info-500 */
+  --chart-5: #e8a93b; /* warning-500 */
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0d0c14;
+  --sidebar-primary: #7451f5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f2f1f6;
+  --sidebar-accent-foreground: #0d0c14;
+  --sidebar-border: #e7e5ee;
+  --sidebar-ring: #5d37e0;
+}
+
+.dark {
+  /* Semantic tokens — DARK THEME (default per Design System "dark-first")
+     Elevation strategy: progressive surface LIGHTENING (bg -> card -> popover)
+     plus hairline borders, since box-shadow is nearly invisible on dark
+     surfaces. See docs/DesignSystem.md § Dark Theme Surface & Elevation. */
+  --background: #0a0912; /* neutral-50 (dark app background) */
+  --foreground: #dedce8; /* neutral-800 (primary text, dark theme) */
+  --card: #131220; /* neutral-100 (surface/card) */
+  --card-foreground: #dedce8;
+  --popover: #1b1a2b; /* neutral-200 (elevated surface) — lighter than card */
+  --popover-foreground: #f7f6fa; /* neutral-900 (highest emphasis) */
+  --primary: #5d37e0; /* primary-600 — deeper step reads best on dark bg */
+  --primary-foreground: #ffffff;
+  --secondary: #1b1a2b; /* neutral-200 */
+  --secondary-foreground: #f7f6fa;
+  --muted: #131220;
+  --muted-foreground: #8c8aa3; /* neutral-600 (secondary text) */
+  --accent: #20105a; /* primary-900 tint — subtle on-brand hover background */
+  --accent-foreground: #cfc1ff; /* primary-200 */
+  --destructive: #e2544b;
+  --destructive-foreground: #ffffff;
+  --border: #262538; /* neutral-300 — the "hairline top-lit" border */
+  --input: #262538;
+  --ring: #ad97ff; /* primary-300 — meets AA non-text contrast on dark bg */
+
+  --chart-1: #8d71ff;
+  --chart-2: #f5a623;
+  --chart-3: #2fb673;
+  --chart-4: #4c8dff;
+  --chart-5: #e8a93b;
+
+  --sidebar: #131220;
+  --sidebar-foreground: #dedce8;
+  --sidebar-primary: #5d37e0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1b1a2b;
+  --sidebar-accent-foreground: #f7f6fa;
+  --sidebar-border: #262538;
+  --sidebar-ring: #ad97ff;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html {
+    @apply scroll-smooth font-sans;
+  }
+
+  /* Respect reduced-motion preferences globally — see docs/DesignSystem.md
+     § Motion. Individual Framer Motion usages should also branch on
+     `useReducedMotion()`, but this is the CSS-level safety net. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * Container width utilities — see docs/DesignSystem.md § Layout.
+ * Deliberately plain classes (not a Tailwind plugin) for readability;
+ * usage: <div className="container-default"> ... </div>
+ */
+@utility container-narrow {
+  width: 100%;
+  max-width: 45rem; /* 720px — reading-focused content */
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@utility container-default {
+  width: 100%;
+  max-width: 70rem; /* 1120px — standard page content */
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@utility container-wide {
+  width: 100%;
+  max-width: 82.5rem; /* 1320px — discovery grids, landing sections */
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}

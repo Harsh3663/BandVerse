@@ -1,0 +1,118 @@
+import type { VendorEventPackage } from "./types";
+
+const now = "2026-01-01T00:00:00.000Z";
+
+/** Curated multi-vendor packages for Indian events. */
+export const curatedVendorPackages: readonly VendorEventPackage[] = [
+  {
+    id: "pkg_wedding_music",
+    slug: "wedding-music-package",
+    title: "Wedding Music Package",
+    description: "Singer, DJ, and live support for reception & sangeet.",
+    eventTypeId: "wedding",
+    cityHints: ["Mumbai", "Delhi", "Pune", "Bengaluru"],
+    guestRange: { min: 100, max: 800 },
+    basePrice: 180_000,
+    currency: "INR",
+    slots: [
+      { vendorType: "musician", quantity: 1, includedBudget: 60_000 },
+      { vendorType: "dj", quantity: 1, includedBudget: 45_000 },
+      { vendorType: "sound_vendor", quantity: 1, includedBudget: 35_000 },
+      { vendorType: "lighting_vendor", quantity: 1, includedBudget: 25_000 },
+    ],
+    includesVenueEstimate: false,
+    tags: ["wedding", "music"],
+    createdAt: now,
+  },
+  {
+    id: "pkg_corporate",
+    slug: "corporate-event-package",
+    title: "Corporate Event Package",
+    description: "Anchor, AV, and live music for corporate evenings.",
+    eventTypeId: "corporate",
+    cityHints: ["Bengaluru", "Hyderabad", "Mumbai", "Gurugram"],
+    guestRange: { min: 50, max: 500 },
+    basePrice: 220_000,
+    currency: "INR",
+    slots: [
+      { vendorType: "anchor", quantity: 1, includedBudget: 40_000 },
+      { vendorType: "band", quantity: 1, includedBudget: 90_000 },
+      { vendorType: "sound_vendor", quantity: 1, includedBudget: 50_000 },
+      { vendorType: "lighting_vendor", quantity: 1, includedBudget: 30_000 },
+    ],
+    includesVenueEstimate: true,
+    tags: ["corporate"],
+    createdAt: now,
+  },
+  {
+    id: "pkg_garba",
+    slug: "garba-night-package",
+    title: "Garba Night Package",
+    description: "Garba team, DJ, and lighting for Navratri nights.",
+    eventTypeId: "garba",
+    cityHints: ["Ahmedabad", "Vadodara", "Surat", "Mumbai"],
+    guestRange: { min: 200, max: 2000 },
+    basePrice: 250_000,
+    currency: "INR",
+    slots: [
+      { vendorType: "garba_team", quantity: 1, includedBudget: 120_000 },
+      { vendorType: "dj", quantity: 1, includedBudget: 50_000 },
+      { vendorType: "lighting_vendor", quantity: 1, includedBudget: 40_000 },
+      { vendorType: "sound_vendor", quantity: 1, includedBudget: 40_000 },
+    ],
+    includesVenueEstimate: false,
+    tags: ["garba", "cultural"],
+    createdAt: now,
+  },
+  {
+    id: "pkg_maha_wedding",
+    slug: "traditional-maharashtrian-wedding-package",
+    title: "Traditional Maharashtrian Wedding Package",
+    description: "Pandit, bhajan, dhol-tasha, and mehendi for a classic celebration.",
+    eventTypeId: "wedding",
+    cityHints: ["Pune", "Mumbai", "Nagpur", "Nashik"],
+    guestRange: { min: 150, max: 1000 },
+    basePrice: 320_000,
+    currency: "INR",
+    slots: [
+      { vendorType: "pandit_services", quantity: 1, includedBudget: 25_000 },
+      { vendorType: "bhajan_mandali", quantity: 1, includedBudget: 40_000 },
+      { vendorType: "dhol_tasha_team", quantity: 1, includedBudget: 80_000 },
+      { vendorType: "mehendi_artist", quantity: 2, includedBudget: 30_000 },
+      { vendorType: "decorator", quantity: 1, includedBudget: 90_000 },
+      { vendorType: "photographer", quantity: 2, includedBudget: 55_000 },
+    ],
+    includesVenueEstimate: true,
+    tags: ["wedding", "maharashtrian", "cultural"],
+    createdAt: now,
+  },
+  {
+    id: "pkg_luxury_wedding",
+    slug: "luxury-wedding-package",
+    title: "Luxury Wedding Package",
+    description: "Planner-led stack with photo/video, decor, music, and MC.",
+    eventTypeId: "wedding",
+    cityHints: ["Mumbai", "Delhi", "Jaipur", "Goa"],
+    guestRange: { min: 200, max: 1500 },
+    basePrice: 750_000,
+    currency: "INR",
+    slots: [
+      { vendorType: "wedding_planner", quantity: 1, includedBudget: 150_000 },
+      { vendorType: "decorator", quantity: 1, includedBudget: 200_000 },
+      { vendorType: "photographer", quantity: 2, includedBudget: 120_000 },
+      { vendorType: "videographer", quantity: 1, includedBudget: 90_000 },
+      { vendorType: "musician", quantity: 1, includedBudget: 80_000 },
+      { vendorType: "dj", quantity: 1, includedBudget: 60_000 },
+      { vendorType: "mc", quantity: 1, includedBudget: 50_000 },
+    ],
+    includesVenueEstimate: true,
+    tags: ["wedding", "luxury"],
+    createdAt: now,
+  },
+];
+
+export function getVendorPackageById(
+  id: string,
+): VendorEventPackage | undefined {
+  return curatedVendorPackages.find((p) => p.id === id || p.slug === id);
+}
